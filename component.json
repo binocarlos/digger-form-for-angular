@@ -1,0 +1,19 @@
+{
+  "name": "digger-form",
+  "repo": "binocarlos/digger-form",
+  "description": "Angular directives to display forms based on an array of field descriptors (blueprints)",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "styles": [
+    "page.css"
+  ],
+  "scripts": [
+    "index.js",
+    "form.js",
+    "field.js"
+  ]
+}
