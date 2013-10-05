@@ -2,7 +2,7 @@
   
 <div ng-form="diggerForm" class="form-horizontal">
   <div class="form-group" ng-class="{error: haserror, 'has-error':container.errors[field.name]}" ng-repeat="field in fields">
-    <label for="{{ field.name }}" class="col-sm-3 control-label">{{ (field.title || field.name) | ucfirst }}</label>
+    <label for="{{ field.name }}" class="col-sm-3 control-label">{{ field.usetitle | ucfirst }}</label>
     <div class="col-sm-7">
       <digger-field readonly="readonly" field="field" container="container" fieldclass="fieldclass" />
     </div>

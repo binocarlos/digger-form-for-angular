@@ -37,7 +37,7 @@ angular
 
         function getstring(){
 
-          return ($scope.model ? $scope.model[$scope.fieldname] : []).join(', ');
+          return (($scope.model ? $scope.model[$scope.fieldname] : []) || []).join(', ');
         }
 
         function setstring(st){
@@ -227,14 +227,10 @@ angular
             $scope.rendertemplate = template;
           }
           else{
-
-            
             $scope.fieldtype = fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
-
-            
           }
 
-
+          $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
         }
 
  
