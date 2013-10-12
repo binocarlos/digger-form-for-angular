@@ -196,7 +196,10 @@ angular
             $scope.pattern = new RegExp(pattern);
           }
 
-          if($scope.field.options_csv){
+          if($scope.field.options){
+            $scope.options = $scope.field.options;
+          }
+          else if($scope.field.options_csv){
             $scope.options = ($scope.field.options_csv.split(/,/) || []).map(function(option){
               return option.replace(/^\s+/, '').replace(/\s+$/, '');
             })
