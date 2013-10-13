@@ -186,6 +186,7 @@ angular
           if(!$scope.container){
             return;
           }
+
           
           var pattern = $scope.field.pattern || '';
 
@@ -196,14 +197,17 @@ angular
             $scope.pattern = new RegExp(pattern);
           }
 
+          // the options are supplied as an array extracted from the field's option children (inside the blueprint XML / container)
           if($scope.field.options){
             $scope.options = $scope.field.options;
           }
+          // the options are supplied as csv
           else if($scope.field.options_csv){
             $scope.options = ($scope.field.options_csv.split(/,/) || []).map(function(option){
               return option.replace(/^\s+/, '').replace(/\s+$/, '');
             })
           }
+          // read the options list from digger
           else if($scope.field.options_warehouse){
             var warehouse = $digger.connect($scope.field.options_warehouse);
 
@@ -224,20 +228,35 @@ angular
           var template = $digger.template.get($scope.field.type);
 
           $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
-          
+
+          /*
+                    
+            manual templates on page
+            
+          */          
           if(template){
             $scope.fieldtype = 'template';
             $scope.rendertemplate = template;
           }
+          /*
+          
+            any field type with '/' means it is a component living on github
+            
+          */
+          else if(($scope.field.type || '').match(/\//)){
+            $scope.fieldtype = 'component';
+          }
+          /*
+          
+            standard digger fields
+            
+          */
           else{
             $scope.fieldtype = fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
 
           $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
         }
-
- 
-
 
       },
       link:function($scope, elem, $attrs){

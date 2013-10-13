@@ -1,9 +1,12 @@
 <div ng-switch="fieldtype">
 	<div ng-switch-when="textarea">
-		<textarea style="min-height:200px;" name="{{ field.name }}" class="form-control" ng-readonly="readonly" ng-model="model[fieldname]"></textarea>
+		<textarea style="min-height:200px;width:100%;" name="{{ field.name }}" class="form-control" ng-readonly="readonly" ng-model="model[fieldname]"></textarea>
 	</div>
 	<div ng-switch-when="template">
 		
+	</div>
+	<div ng-switch-when="component">
+		<digger-component name="field.type" field="field" container="container" readonly="globalreadonly" />
 	</div>
 	<div ng-switch-when="diggerclass">
 		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="readonly" ng-pattern="pattern" />
