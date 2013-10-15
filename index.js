@@ -8,6 +8,12 @@ angular
     
   ])
 
+  .filter('fieldtitle', function(){
+    return function(title){
+      return (title || '').replace(/_/g, ' ');
+    }
+  })
+
   .directive('diggerForm', function(){
 
 
