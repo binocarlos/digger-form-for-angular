@@ -69,37 +69,50 @@ angular
     }
   })
 
+
   .factory('$diggerFieldTypes', function(){
+
+    /*
+    
+      the field types that we have in our core template
+
+      the user can also use templates and components
+      
+    */
+    var fieldtypes = {
+      text:true,
+      url:true,
+      number:true,
+      money:'number',
+      email:true,
+      textarea:true,
+      diggerclass:true,
+      template:true,
+      checkbox:true,
+      radio:true,
+      select:true
+    }
+
     return {
-      list:[
-        'text',
-        'textarea',
-        'number',
-        'email',
-        'radio',
-        'checkbox',
-        'select'
-      ],
-      properties:{
-        text:{},
-        number:{},
-        email:{},
-        textarea:{},
-        checkbox:{},
-        file:{},
-        radio:{
-          options:true
-        },
-        select:{
-          options:true
-        }
-      }
+      types:fieldtypes
     }
   })
 
   /*
   
     extracts the JS object that contains the target field - this becomes the model for the form field
+
+    e.g. field = 'city.address'
+
+    container.get(0).city
+
+    -> 
+
+    model = {
+      address:'hello'
+    }
+
+
     
   */
   .factory('$propertyModel', function(){
@@ -123,31 +136,10 @@ angular
     }
   })
 
-  .directive('diggerField', function($compile, $safeApply, $propertyModel){
+  .directive('diggerField', function($compile, $safeApply, $propertyModel, $diggerFieldTypes){
 
     //field.required && showvalidate && containerForm[field.name].$invalid
 
-    /*
-    
-      these are types that should be converted into the input type="..."
-      
-    */
-    var fieldtypes = {
-      text:true,
-      number:true,
-      email:true,
-      textarea:true,
-      diggerclass:true,
-      template:true,
-      checkbox:true,
-      radio:true,
-      select:true
-    }
-
-    var textrendertypes = {
-      number:true,
-      email:true
-    }
 
     return {
       restrict:'EA',
@@ -174,6 +166,11 @@ angular
           $scope.setup_render_type();
         }
 
+        /*
+        
+          get the containing model for the field - this might be nested in the container
+          
+        */
         $scope.setup_field_and_model = function(){
 
           if(!$scope.container){
@@ -187,13 +184,24 @@ angular
           
         }
 
+        /*
+        
+          sort out the values for the field to render
+
+          we check if we are rendering a template or component
+          
+        */
         $scope.setup_render_type = function(){
 
           if(!$scope.container){
             return;
           }
 
+          /*
           
+            a manual regexp given by the blueprint
+            
+          */
           var pattern = $scope.field.pattern || '';
 
           if(pattern.length<=0){
@@ -203,6 +211,11 @@ angular
             $scope.pattern = new RegExp(pattern);
           }
 
+          /*
+          
+            options
+            
+          */
           // the options are supplied as an array extracted from the field's option children (inside the blueprint XML / container)
           if($scope.field.options){
             $scope.options = $scope.field.options;
@@ -236,7 +249,9 @@ angular
           $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
 
           /*
-                    
+            
+            TEMPLATE
+
             manual templates on page
             
           */          
@@ -246,6 +261,8 @@ angular
           }
           /*
           
+            COMPONENT
+
             any field type with '/' means it is a component living on github
             
           */
@@ -254,11 +271,24 @@ angular
           }
           /*
           
+            DIGGER FIELD
+
             standard digger fields
             
           */
           else{
-            $scope.fieldtype = fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
+
+            var fieldtype = 'text';
+
+            if($diggerFieldTypes[$scope.field.type]){
+              var info = $diggerFieldTypes[$scope.field.type];
+
+              if(typeof(info)==='string'){
+                fieldtype = info;
+              }
+            }
+
+            $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
 
           $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
