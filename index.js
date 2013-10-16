@@ -197,6 +197,30 @@ angular
           }
         })
 
+        move = function (old_index, new_index) {
+           // for testing purposes
+      };
+
+        $scope.moverow = function(old_index, dir){
+
+          var new_index = old_index + dir;
+          if (new_index >= $scope.list.length) {
+              var k = new_index - $scope.list.length;
+              while ((k--) + 1) {
+                  $scope.list.push(undefined);
+              }
+          }
+          $scope.list.splice(new_index, 0, $scope.list.splice(old_index, 1)[0]);
+        }
+
+        $scope.deleterow = function(index){
+          $scope.list.splice(index,1);
+        }
+
+        $scope.addrow = function(){
+          $scope.list.push(null);
+        }
+
         
 
         
