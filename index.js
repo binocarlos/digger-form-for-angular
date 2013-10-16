@@ -1,6 +1,8 @@
 var templates = {
   form:require('./form'),
-  field:require('./field')
+  field:require('./field'),
+  list:require('./list'),
+  fieldrender:require('./fieldrender')
 }
 
 angular
@@ -136,6 +138,73 @@ angular
     }
   })
 
+  .factory('processFieldType', function($diggerFieldTypes){
+    return function($scope){
+
+    }
+
+  })
+
+  .directive('diggerFieldRender', function(){
+
+
+    return {
+      restrict:'EA',
+      scope:{
+        field:'=',
+        container:'=', 
+        model:'=',
+        fieldname:'=',
+        fieldtype:'=',
+        readonly:'='
+      },
+      replace:true,
+      template:templates.fieldrender,
+      controller:function($scope){
+
+
+      }
+    }
+  })
+
+  .directive('diggerListRender', function(){
+
+
+    return {
+      restrict:'EA',
+      scope:{
+        field:'=',
+        container:'=', 
+        model:'=',
+        fieldname:'=',
+        fieldtype:'=',
+        readonly:'='
+      },
+      replace:true,
+      template:templates.list,
+      controller:function($scope){
+
+        $scope.$watch('model', function(model){
+          if(!model){
+            $scope.list = [];
+            return;
+          }
+
+          $scope.list = $scope.model[$scope.fieldname];
+
+          if(!$scope.list){
+            $scope.list = $scope.model[$scope.fieldname] = [];
+          }
+        })
+
+        
+
+        
+
+      }
+    }
+  })
+
   .directive('diggerField', function($compile, $safeApply, $propertyModel, $diggerFieldTypes){
 
     //field.required && showvalidate && containerForm[field.name].$invalid
@@ -145,7 +214,8 @@ angular
       restrict:'EA',
       scope:{
         field:'=',
-        container:'=',
+        container:'=', 
+        listindex:'=',
         fieldclass:'=',
         globalreadonly:'=readonly'
       },
@@ -181,7 +251,11 @@ angular
 
           $scope.fieldname = parsedmodel.fieldname;
           $scope.model = parsedmodel.model;
-          
+
+          if($scope.field.list && !$scope.model[$scope.field.name]){
+            $scope.model[$scope.field.name] = [54, 67]
+          }
+
         }
 
         /*
@@ -192,10 +266,6 @@ angular
           
         */
         $scope.setup_render_type = function(){
-
-          if(!$scope.container){
-            return;
-          }
 
           /*
           
@@ -239,14 +309,15 @@ angular
             })
           }
 
+          $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
+
+              
           /*
           
             if they have registered a custom template then use that!
             
           */
           var template = $digger.template.get($scope.field.type);
-
-          $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
 
           /*
             

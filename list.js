@@ -1,0 +1,1 @@
+module.exports = '<div ng-repeat="item in list">\n	<digger-field-render readonly="readonly" field="field" container="container" model="list" fieldname="$index" fieldtype="fieldtype" />\n</div>';

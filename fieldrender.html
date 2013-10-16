@@ -1,0 +1,52 @@
+<div ng-switch="fieldtype">
+	<div ng-switch-when="textarea">
+		<textarea style="min-height:200px;width:100%;" name="{{ field.name }}" class="form-control" ng-readonly="readonly" ng-model="model[fieldname]"></textarea>
+	</div>
+	<div ng-switch-when="template">
+		
+	</div>
+	<div ng-switch-when="component">
+		<digger-component name="field.type" field="field" container="container" readonly="globalreadonly" />
+	</div>
+
+	<div ng-switch-when="diggerclass">
+		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval"  ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="readonly" ng-pattern="pattern" />
+	</div>
+	<div ng-switch-when="radio">
+		<span ng-repeat="option in options">
+			<input type="radio"
+				ng-readonly="readonly" 
+	       ng-model="model[fieldname]"
+	       value="{{option}}" /> <small>{{ option }}</small> &nbsp;
+	  </span>
+
+	</div>
+	<div ng-switch-when="select">
+
+		<select 
+
+			ng-disabled="readonly"
+			ng-model="model[fieldname]" 
+			ng-options="o for o in options"></select>
+
+	  
+	</div>
+	<div ng-switch-when="checkbox">
+
+		<input ng-readonly="readonly" type="checkbox" ng-model="model[fieldname]" />
+		
+	</div>
+	<div ng-switch-when="text">
+		<!--<input name="{{ field.name }}" class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="model[fieldname]"  ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="readonly" ng-pattern="pattern" />-->
+		<input name="{{ field.name }}" class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="model[fieldname]" ng-readonly="readonly"  />
+	</div>
+	<div ng-switch-when="email">
+		<input name="{{ field.name }}" class="form-control {{ fieldclass || 'input' }}" type="email" ng-model="model[fieldname]" ng-readonly="readonly"  />
+	</div>
+	<div ng-switch-when="url">
+		<input name="{{ field.name }}" class="form-control {{ fieldclass || 'input' }}" type="url" ng-model="model[fieldname]" ng-readonly="readonly"  />
+	</div>	
+	<div ng-switch-when="number">
+		<input id="{{ field.name }}" name="{{ field.name }}" class="form-control {{ fieldclass || 'input' }}" type="number" ng-model="model[fieldname]" ng-readonly="readonly" />
+	</div>
+</div>

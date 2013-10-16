@@ -16,6 +16,8 @@
   "scripts": [
     "index.js",
     "form.js",
-    "field.js"
+    "field.js",
+    "list.js",
+    "fieldrender.js"
   ]
 }
