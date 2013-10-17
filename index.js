@@ -198,7 +198,21 @@ angular
   })
 
   .directive('diggerListRender', function($safeApply){
+    function littleid(chars){
 
+      chars = chars || 6;
+
+      var pattern = '';
+
+      for(var i=0; i<chars; i++){
+        pattern += 'x';
+      }
+      
+      return pattern.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    }
 
     return {
       restrict:'EA',
@@ -222,17 +236,28 @@ angular
           if(!$scope.model[$scope.fieldname]){
             $scope.model[$scope.fieldname] = [];
           }
-          $scope.list = $scope.model[$scope.fieldname];
+          $scope.list = $scope.model[$scope.fieldname].map(function(item){
+            return {
+              value:item
+            }
+          })
+          $scope.usefieldname = 'value';
         })
 
+        $scope.$watch('list', function(list){
+          $scope.model[$scope.fieldname] = list.map(function(item){
+            return item.value;
+          })
+        }, true);
+
         $scope.addrow = function(){
-          console.log('-------------------------------------------');
-          console.log('add');
-          $scope.list.push(null);
+          $scope.list.push({
+            value:null
+          })
         }
 
         $scope.deleterow = function(index){
-          $scope.list = $scope.list.reverse();
+          $scope.list.splice(index,1);
         }
 
         $scope.moverow = function(old_index, dir){
@@ -250,9 +275,6 @@ angular
 
         }
 
-        $scope.get_tracker = function($index, item){
-          return $index;
-        }
       }
     }
   })
