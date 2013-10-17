@@ -145,7 +145,7 @@ angular
 
   })
 
-  .directive('diggerFieldRender', function(){
+  .directive('diggerFieldRender', function($compile){
 
 
     return {
@@ -162,12 +162,42 @@ angular
       template:templates.fieldrender,
       controller:function($scope){
 
+          /*
+          
+            if they have registered a custom template then use that!
+            
+          */
+          var template = $digger.template.get($scope.field.type);
 
+          /*
+            
+            TEMPLATE
+
+            manual templates on page
+            
+          */          
+          if(template){
+            $scope.rendertemplate = template;
+
+          }
+
+      },
+      link:function($scope, elem, $attrs){
+
+        $scope.$watch('rendertemplate', function(html){
+
+          if(!html){
+            return;
+          }
+
+          elem.append($compile(html)($scope));
+        })
+          
       }
     }
   })
 
-  .directive('diggerListRender', function(){
+  .directive('diggerListRender', function($safeApply){
 
 
     return {
@@ -186,20 +216,24 @@ angular
 
         $scope.$watch('model', function(model){
           if(!model){
-            $scope.list = [];
             return;
           }
 
-          $scope.list = $scope.model[$scope.fieldname];
-
-          if(!$scope.list){
-            $scope.list = $scope.model[$scope.fieldname] = [];
+          if(!$scope.model[$scope.fieldname]){
+            $scope.model[$scope.fieldname] = [];
           }
+          $scope.list = $scope.model[$scope.fieldname];
         })
 
-        move = function (old_index, new_index) {
-           // for testing purposes
-      };
+        $scope.addrow = function(){
+          console.log('-------------------------------------------');
+          console.log('add');
+          $scope.list.push(null);
+        }
+
+        $scope.deleterow = function(index){
+          $scope.list = $scope.list.reverse();
+        }
 
         $scope.moverow = function(old_index, dir){
 
@@ -211,20 +245,14 @@ angular
               }
           }
           $scope.list.splice(new_index, 0, $scope.list.splice(old_index, 1)[0]);
+
+
+
         }
 
-        $scope.deleterow = function(index){
-          $scope.list.splice(index,1);
+        $scope.get_tracker = function($index, item){
+          return $index;
         }
-
-        $scope.addrow = function(){
-          $scope.list.push(null);
-        }
-
-        
-
-        
-
       }
     }
   })
@@ -270,6 +298,9 @@ angular
           if(!$scope.container){
             return;
           }
+          if(!$scope.field){
+            return;
+          }
 
           var parsedmodel = $propertyModel($scope.container, $scope.field.name);
 
@@ -277,7 +308,7 @@ angular
           $scope.model = parsedmodel.model;
 
           if($scope.field.list && !$scope.model[$scope.field.name]){
-            $scope.model[$scope.field.name] = [54, 67]
+            $scope.model[$scope.field.name] = [];
           }
 
         }
@@ -290,6 +321,13 @@ angular
           
         */
         $scope.setup_render_type = function(){
+
+          if(!$scope.container){
+            return;
+          }
+          if(!$scope.field){
+            return;
+          }
 
           /*
           
@@ -335,7 +373,6 @@ angular
 
           $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
 
-              
           /*
           
             if they have registered a custom template then use that!
@@ -343,16 +380,8 @@ angular
           */
           var template = $digger.template.get($scope.field.type);
 
-          /*
-            
-            TEMPLATE
-
-            manual templates on page
-            
-          */          
           if(template){
             $scope.fieldtype = 'template';
-            $scope.rendertemplate = template;
           }
           /*
           
@@ -391,15 +420,6 @@ angular
 
       },
       link:function($scope, elem, $attrs){
-
-        $scope.$watch('rendertemplate', function(html){
-
-          if(!html){
-            return;
-          }
-
-          elem.append($compile(html)($scope));
-        })
 
         $scope.$watch('container', function(){
           $scope.setup();
