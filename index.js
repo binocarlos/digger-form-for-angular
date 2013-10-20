@@ -32,6 +32,9 @@ angular
       transclude:true,
       replace:true,
       template:templates.form,
+      controller:function($scope){
+
+      },
       link:function($scope, elem, $attrs){
 
       }
@@ -297,7 +300,18 @@ angular
       template:templates.field,
       controller:function($scope){
 
-        $scope.parentreadonly = ($scope.globalreadonly || '').indexOf('y')==0;
+        function setupreadonly(){
+          $scope.readonly = $scope.globalreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
+        }
+        
+        $scope.$watch('globalreadonly', function(globalreadonly){
+          
+          setupreadonly();
+
+          //$scope.parentreadonly = globalreadonly;
+          //setupreadonly();
+        })
+
         $scope.fieldname = '';
         $scope.rendertype = 'text';
 
@@ -393,7 +407,7 @@ angular
             })
           }
 
-          $scope.readonly = $scope.parentreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
+          setupreadonly();
 
           /*
           
@@ -426,8 +440,8 @@ angular
 
             var fieldtype = 'text';
 
-            if($diggerFieldTypes[$scope.field.type]){
-              var info = $diggerFieldTypes[$scope.field.type];
+            if($diggerFieldTypes.types[$scope.field.type]){
+              var info = $diggerFieldTypes.types[$scope.field.type];
 
               if(typeof(info)==='string'){
                 fieldtype = info;
