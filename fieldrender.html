@@ -10,8 +10,22 @@
 	</div>
 
 	<div ng-switch-when="diggerclass">
-		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval"  ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="{{ readonly }}" ng-pattern="pattern" />
+		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval" ng-readonly="{{ readonly }}" />
 	</div>
+
+	<div ng-switch-when="diggericon">
+
+		<div class="row">
+			<div class="col-sm-6">
+				<input name="{{ field.name }}" placeholder="icon-folder-close" class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="model[fieldname]"  ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="{{ readonly }}" ng-pattern="pattern" />
+			</div>
+			<div class="col-sm-6">
+				<a href="http://fortawesome.github.io/Font-Awesome/icons/" target="_blank" class="btn btn-info">icon list</a>
+			</div>
+		</div>
+		
+	</div>
+
 	<div ng-switch-when="radio">
 		<span ng-repeat="option in options">
 			<input type="radio"

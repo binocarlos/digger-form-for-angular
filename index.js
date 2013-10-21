@@ -74,6 +74,27 @@ angular
     }
   })
 
+  .factory('$digger_fields', function($safeApply){
+
+    return [{
+      name:'_digger.tag',
+      title:'<tag>'
+    },{
+      name:'_digger.class',
+      type:'diggerclass',
+      title:'.class'
+    },{
+      name:'_digger.id',
+      title:'#id'
+    },{
+      name:'_digger.icon',
+      type:'diggericon',
+      title:'icon'
+    }]
+
+  })
+
+
 
   .factory('$diggerFieldTypes', function(){
 
@@ -92,6 +113,7 @@ angular
       email:true,
       textarea:true,
       diggerclass:true,
+      diggericon:true,
       template:true,
       checkbox:true,
       radio:true,
@@ -390,6 +412,9 @@ angular
       controller:function($scope){
 
         function setupreadonly(){
+          if(!$scope.container){
+            return;
+          }
           $scope.readonly = $scope.globalreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
         }
         
