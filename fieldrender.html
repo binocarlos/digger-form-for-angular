@@ -10,7 +10,6 @@
 	</div>
 
 	<div ng-switch-when="diggerclass">
-		CLASS
 		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval"  ng-minlength="field.minlength" ng-maxlength="field.maxlength" ng-readonly="{{ readonly }}" ng-pattern="pattern" />
 	</div>
 	<div ng-switch-when="radio">

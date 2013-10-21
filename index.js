@@ -141,14 +141,8 @@ angular
     }
   })
 
-  .factory('processFieldType', function($diggerFieldTypes){
-    return function($scope){
 
-    }
-
-  })
-
-  .directive('diggerFieldRender', function($compile){
+  .directive('diggerFieldRender', function($compile, $diggerFieldTypes){
 
 
     return {
@@ -158,12 +152,79 @@ angular
         container:'=', 
         model:'=',
         fieldname:'=',
-        fieldtype:'=',
         readonly:'='
       },
       replace:true,
       template:templates.fieldrender,
       controller:function($scope){
+
+        $scope.$watch('container', function(){
+          $scope.setup_render_type();
+        })
+
+        $scope.$watch('field', function(){
+          $scope.setup_render_type();
+        })
+
+        /*
+        
+          sort out the values for the field to render
+
+          we check if we are rendering a template or component
+          
+        */
+        $scope.setup_render_type = function(){
+
+          if(!$scope.container){
+            return;
+          }
+          if(!$scope.field){
+            return;
+          }
+
+          /*
+          
+            a manual regexp given by the blueprint
+            
+          */
+          var pattern = $scope.field.pattern || '';
+
+          if(pattern.length<=0){
+            $scope.pattern = /./;
+          }
+          else{
+            $scope.pattern = new RegExp(pattern);
+          }
+
+          /*
+          
+            options
+            
+          */
+          // the options are supplied as an array extracted from the field's option children (inside the blueprint XML / container)
+          if($scope.field.options){
+            $scope.options = $scope.field.options;
+          }
+          // the options are supplied as csv
+          else if($scope.field.options_csv){
+            $scope.options = ($scope.field.options_csv.split(/,/) || []).map(function(option){
+              return option.replace(/^\s+/, '').replace(/\s+$/, '');
+            })
+          }
+          // read the options list from digger
+          else if($scope.field.options_warehouse){
+            var warehouse = $digger.connect($scope.field.options_warehouse);
+
+            warehouse($scope.field.options_selector).ship(function(results){
+              $safeApply($scope, function(){
+                $scope.options = results.map(function(result){
+                  return result.title();
+                })
+              })
+            })
+          }
+
+          
 
           /*
           
@@ -172,18 +233,47 @@ angular
           */
           var template = $digger.template.get($scope.field.type);
 
-          /*
-            
-            TEMPLATE
-
-            manual templates on page
-            
-          */          
           if(template){
+            $scope.fieldtype = 'template';
             $scope.rendertemplate = template;
+          }
+          /*
+          
+            COMPONENT
 
+            any field type with '/' means it is a component living on github
+            
+          */
+          else if(($scope.field.type || '').match(/\//)){
+            $scope.fieldtype = 'component';
+          }
+          /*
+          
+            DIGGER FIELD
+
+            standard digger fields
+            
+          */
+          else{
+
+            var fieldtype = 'text';
+
+            if($diggerFieldTypes.types[$scope.field.type]){
+              var info = $diggerFieldTypes.types[$scope.field.type];
+
+              if(typeof(info)==='string'){
+                fieldtype = info;
+              }
+              else{
+                fieldtype = $scope.field.type;
+              }
+            }
+
+            $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
 
+          $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
+        }
       },
       link:function($scope, elem, $attrs){
 
@@ -224,7 +314,6 @@ angular
         container:'=', 
         model:'=',
         fieldname:'=',
-        fieldtype:'=',
         readonly:'='
       },
       replace:true,
@@ -321,7 +410,7 @@ angular
 
         $scope.setup = function(){
           $scope.setup_field_and_model();
-          $scope.setup_render_type();
+          setupreadonly();
         }
 
         /*
@@ -349,110 +438,6 @@ angular
 
         }
 
-        /*
-        
-          sort out the values for the field to render
-
-          we check if we are rendering a template or component
-          
-        */
-        $scope.setup_render_type = function(){
-
-          if(!$scope.container){
-            return;
-          }
-          if(!$scope.field){
-            return;
-          }
-
-          /*
-          
-            a manual regexp given by the blueprint
-            
-          */
-          var pattern = $scope.field.pattern || '';
-
-          if(pattern.length<=0){
-            $scope.pattern = /./;
-          }
-          else{
-            $scope.pattern = new RegExp(pattern);
-          }
-
-          /*
-          
-            options
-            
-          */
-          // the options are supplied as an array extracted from the field's option children (inside the blueprint XML / container)
-          if($scope.field.options){
-            $scope.options = $scope.field.options;
-          }
-          // the options are supplied as csv
-          else if($scope.field.options_csv){
-            $scope.options = ($scope.field.options_csv.split(/,/) || []).map(function(option){
-              return option.replace(/^\s+/, '').replace(/\s+$/, '');
-            })
-          }
-          // read the options list from digger
-          else if($scope.field.options_warehouse){
-            var warehouse = $digger.connect($scope.field.options_warehouse);
-
-            warehouse($scope.field.options_selector).ship(function(results){
-              $safeApply($scope, function(){
-                $scope.options = results.map(function(result){
-                  return result.title();
-                })
-              })
-            })
-          }
-
-          setupreadonly();
-
-          /*
-          
-            if they have registered a custom template then use that!
-            
-          */
-          var template = $digger.template.get($scope.field.type);
-
-          if(template){
-            $scope.fieldtype = 'template';
-          }
-          /*
-          
-            COMPONENT
-
-            any field type with '/' means it is a component living on github
-            
-          */
-          else if(($scope.field.type || '').match(/\//)){
-            $scope.fieldtype = 'component';
-          }
-          /*
-          
-            DIGGER FIELD
-
-            standard digger fields
-            
-          */
-          else{
-
-            var fieldtype = 'text';
-
-            if($diggerFieldTypes.types[$scope.field.type]){
-              var info = $diggerFieldTypes.types[$scope.field.type];
-
-              if(typeof(info)==='string'){
-                fieldtype = info;
-              }
-            }
-
-            $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
-          }
-
-          $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
-        }
 
       },
       link:function($scope, elem, $attrs){
