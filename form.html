@@ -2,10 +2,10 @@
 <div ng-form="diggerForm" class="form-horizontal">
   <div class="form-group" ng-repeat="field in fields" ng-class="{'has-error': container.data('error.' + field.name)}">
     <label for="{{ field.name }}" class="control-label col-lg-2">{{ field.usetitle | fieldtitle | ucfirst }}</label>
-    <div class="col-lg-10">
+    <div class="col-lg-8">
       <digger-field readonly="readonly" field="field" container="container" fieldclass="fieldclass" />
     </div>
-    <!--
+    
     <div class="col-sm-2" ng-show="showedit">
       <a href="#" class="btn btn-mini" ng-click="$emit('deletefield', field)">
           <i class="icon-trash"></i>
@@ -14,7 +14,7 @@
           <i class="icon-edit"></i>
       </a>
     </div>
-    -->
+    
   </div>
   <div ng-transclude></div>
 </div>
