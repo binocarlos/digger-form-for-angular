@@ -166,7 +166,6 @@ angular
 
   .directive('diggerFieldRender', function($compile, $diggerFieldTypes){
 
-
     return {
       restrict:'EA',
       scope:{
@@ -204,6 +203,8 @@ angular
             return;
           }
 
+
+
           /*
           
             a manual regexp given by the blueprint
@@ -227,11 +228,14 @@ angular
           if($scope.field.options){
             $scope.options = $scope.field.options;
           }
+
           // the options are supplied as csv
-          else if($scope.field.options_csv){
+          if($scope.field.options_csv){
+
             $scope.options = ($scope.field.options_csv.split(/,/) || []).map(function(option){
               return option.replace(/^\s+/, '').replace(/\s+$/, '');
             })
+
           }
           // read the options list from digger
           else if($scope.field.options_warehouse){
