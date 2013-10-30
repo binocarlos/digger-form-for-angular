@@ -118,7 +118,9 @@ angular
       template:true,
       checkbox:true,
       radio:true,
-      select:true
+      select:true,
+      diggerurl:'binocarlos/digger-url-component',
+      file:'binocarlos/file-uploader'
     }
 
     return {
@@ -316,13 +318,25 @@ angular
           }
 
           
+          var fieldtype = 'text';
+
+          if($diggerFieldTypes.types[$scope.field.type]){
+            var info = $diggerFieldTypes.types[$scope.field.type];
+
+            if(typeof(info)==='string'){
+              fieldtype = info;
+            }
+            else{
+              fieldtype = $scope.field.type;
+            }
+          }
 
           /*
           
             if they have registered a custom template then use that!
             
           */
-          var template = $digger.template.get($scope.field.type);
+          var template = $digger.template.get(fieldtype);
 
           if(template){
             $scope.fieldtype = 'template';
@@ -335,8 +349,9 @@ angular
             any field type with '/' means it is a component living on github
             
           */
-          else if(($scope.field.type || '').match(/\//)){
+          else if((fieldtype || '').match(/\//)){
             $scope.fieldtype = 'component';
+            $scope.rendercomponent = fieldtype;
           }
           /*
           
@@ -347,18 +362,7 @@ angular
           */
           else{
 
-            var fieldtype = 'text';
-
-            if($diggerFieldTypes.types[$scope.field.type]){
-              var info = $diggerFieldTypes.types[$scope.field.type];
-
-              if(typeof(info)==='string'){
-                fieldtype = info;
-              }
-              else{
-                fieldtype = $scope.field.type;
-              }
-            }
+            
 
             $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
