@@ -330,6 +330,9 @@ angular
               fieldtype = $scope.field.type;
             }
           }
+          else if($scope.field.type){
+            fieldtype = $scope.field.type;
+          }
 
           /*
           
@@ -361,9 +364,6 @@ angular
             
           */
           else{
-
-            
-
             $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
 
