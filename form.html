@@ -4,14 +4,12 @@
     <label for="{{ field.name }}" class="control-label col-lg-2">{{ field.usetitle | fieldtitle | ucfirst }}</label>
     <div class="col-lg-8">
       <digger-field readonly="readonly" field="field" container="container" fieldclass="fieldclass" />
+      sdf
     </div>
     
     <div class="col-sm-2" ng-show="showedit">
-      <a href="#" class="btn btn-mini" ng-click="$emit('deletefield', field)">
-          <i class="icon-trash"></i>
-      </a>
-      <a href="#" class="btn btn-mini" ng-click="$emit('editfield', field)">
-          <i class="icon-edit"></i>
+      <a href="#" class="btn btn-sm btn-warning" ng-click="$emit('deletefield', field)">
+          <i class="fa fa-trash-o"></i>
       </a>
     </div>
     
