@@ -485,10 +485,11 @@ angular
       controller:function($scope){
 
         function setupreadonly(){
-          if(!$scope.container){
-            return;
+          var globalval = $scope.globalreadonly;
+          if(typeof(globalval)=='string'){
+            globalval = globalval=='true' ? true : false;
           }
-          $scope.readonly = $scope.globalreadonly || ($scope.field.type==='readonly' || $scope.field.readonly || $scope.container.data('readonly'));
+          $scope.readonly = globalval || ($scope.field.type==='readonly' || $scope.field.readonly || ($scope.container ? $scope.container.data('readonly') : false));
         }
         
         $scope.$watch('globalreadonly', function(globalreadonly){
