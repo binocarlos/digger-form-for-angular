@@ -186,22 +186,14 @@ angular
       template:'<div></div>',
       controller:function($scope){
 
-        console.log('-------------------------------------------');
-        console.log('COMPONENT');
-
         // we load the component from the server
         // once it has done - require the component (it has registered via the script load)
         $scope.$watch('name', function(name){
 
-          console.log('-------------------------------------------');
-          console.log('name');
-          console.dir(name);
           if(!name){
             return;
           }
 
-          console.log('-------------------------------------------');
-          console.dir(name);
 
           if($digger.config.debug){
             console.log('-------------------------------------------');
