@@ -147,6 +147,9 @@ angular
   */
   .factory('$propertyModel', function(){
     return function(container, fieldname){
+      if(!container || !fieldname){
+        return {};
+      }
       if(fieldname.indexOf('.')>0){
         var parts = fieldname.split('.');
         var fieldname = parts.pop();
@@ -368,7 +371,13 @@ angular
             $scope.fieldtype = fieldtype;//fieldtypes[$scope.field.type] ? $scope.field.type : 'text';
           }
 
-          $scope.field.usetitle = $scope.field.title ? $scope.field.title : ($scope.field.name.split('.').pop());
+          var titlename = $scope.field ? $scope.field.name : '';
+
+          if(!titlename){
+            titlename = '';
+          }
+
+          $scope.field.usetitle = $scope.field.title ? $scope.field.title : (titlename.split('.').pop());
         }
       },
       link:function($scope, elem, $attrs){
