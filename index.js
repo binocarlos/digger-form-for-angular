@@ -442,7 +442,7 @@ angular
         })
 
         $scope.$watch('list', function(list){
-          $scope.model[$scope.fieldname] = list.map(function(item){
+          $scope.model[$scope.fieldname] = (list || []).map(function(item){
             return item.value;
           })
         }, true);
