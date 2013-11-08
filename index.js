@@ -75,6 +75,25 @@ angular
     }
   })
 
+  .directive('diggerTickField', function($compile, $safeApply){
+    return {
+      restrict:'A',
+      link:function($scope){
+
+        $scope.classtick = $scope.container.hasClass($scope.fieldname);
+        $scope.$watch('classtick', function(val){
+          if(val){
+            $scope.container.addClass($scope.fieldname);
+          }
+          else{
+            $scope.container.removeClass($scope.fieldname); 
+          }
+        });
+
+      }
+    }
+  })
+
   .factory('$digger_fields', function($safeApply){
 
     return [{
@@ -114,6 +133,7 @@ angular
       email:true,
       textarea:true,
       diggerclass:true,
+      classtick:true,
       diggericon:true,
       template:true,
       checkbox:true,

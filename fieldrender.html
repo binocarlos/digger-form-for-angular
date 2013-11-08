@@ -13,6 +13,12 @@
 		<input name="{{ field.name }}" digger-class-field class="form-control {{ fieldclass || 'input' }}" type="text" ng-model="classval" ng-readonly="{{ readonly }}" />
 	</div>
 
+	<div ng-switch-when="classtick">
+
+		<input  ng-disabled="{{ readonly }}" type="checkbox" digger-tick-field ng-model="classtick" />
+
+	</div>
+
 	<div ng-switch-when="diggericon">
 
 		<div class="row">
@@ -29,7 +35,7 @@
 	<div ng-switch-when="radio">
 		<span ng-repeat="option in options">
 			<input type="radio"
-				ng-readonly="{{ readonly }}" 
+				ng-disabled="{{ readonly }}" 
 	       ng-model="model[fieldname]"
 	       value="{{option}}" /> <small>{{ option }}</small> &nbsp;
 	  </span>
@@ -47,7 +53,7 @@
 	</div>
 	<div ng-switch-when="checkbox">
 
-		<input ng-readonly="{{ readonly }}" type="checkbox" ng-model="model[fieldname]" />
+		<input ng-disabled="{{ readonly }}" type="checkbox" ng-model="model[fieldname]" />
 		
 	</div>
 	<div ng-switch-when="text">
