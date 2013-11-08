@@ -462,6 +462,9 @@ angular
         })
 
         $scope.$watch('list', function(list){
+          if(!$scope.model){
+            return;
+          }
           $scope.model[$scope.fieldname] = (list || []).map(function(item){
             return item.value;
           })
