@@ -5,6 +5,8 @@ var templates = {
   fieldrender:require('./fieldrender')
 }
 
+module.exports = 'digger.form';
+
 angular
   .module('digger.form', [
     require('digger-utils-for-angular')
