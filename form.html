@@ -1,6 +1,6 @@
  
 <div ng-form="diggerForm" class="form-horizontal">
-  <div class="form-group" ng-repeat="field in fields" ng-class="{'has-error': container.data('error.' + field.name)}">
+  <div class="form-group" ng-repeat="field in fields" ng-class="{'has-error': container.models[0]._data['error.' + field.name]}">
     <label ng-if="field.label!=false" for="{{ field.name }}" class="control-label col-lg-4">{{ field.usetitle | fieldtitle | ucfirst }}</label>
     <div ng-class="{'col-sm-7':field.label!=false,'col-sm-11':field.label==false}">
       <digger-field readonly="readonly" field="field" container="container" fieldclass="fieldclass" />
