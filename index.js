@@ -38,8 +38,7 @@ angular
 
       },
       link:function($scope, elem, $attrs){
-        console.log('-------------------------------------------');
-        console.log('in the form');
+        
       }
     }
   })
